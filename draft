@@ -1,0 +1,97 @@
+# Airbnb Montreal Data Analysis
+
+# How/where are tourists/Airbnb guests spending their money in Montreal?
+# What makes a successful host in Montreal?
+# Strategy suggestions for Airbnb in Montreal?
+
+# First, some data exploration - look at variables and relationships
+
+# How many Aurbnb hosts are there in Montreal currently?
+select count(distinct host_id) from listings;
+# 7,813 unique hosts
+
+# How many listings are there in Montreal currently?
+select count(distinct id) from listings;
+#12,303 unique listings
+
+# How many of these listings are active? (Active being defined as the last review made no earlier than October 1, 2021)
+# First, convert the "last_review" field to date
+
+
+select 
+  id, 
+;
+
+
+# Hosts with multiple listings?
+select 
+  no_listings_per_host, 
+  count(host_id) as host_count,
+  count(host_id)/sum(count(host_id)) over () percentage
+from
+  (select host_id, count(distinct id) as no_listings_per_host
+from listings
+group by host_id) as a
+group by 
+  no_listings_per_host
+order by
+  no_listings_per_host
+;
+# About 6,500 (84%) hosts only have one listing, other hosts could have multiple listings (up to as many as 155)
+
+# Number of listings and average price by neighbourhood
+select
+  neighbourhood,
+  count(id) as no_listings,
+  avg(price) as avg_price
+from
+  listings
+group by
+  neighbourhood
+order by
+  avg(price) desc
+;
+# Some of the more rural/remote neighbourhoods have higher average prices, my guess is that the properties tend to be larger for these areas (room type/beds)
+
+# Number of listings and average price by Room Type
+select
+  room_type,
+  count(id) as no_listings,
+  avg(price) as avg_price
+from
+  listings
+group by
+  room_type
+order by
+  avg(price) desc
+;
+# What about number of beds?
+
+# Average price per bed by neighbourhood
+select 
+  listings.neighbourhood,
+  sum(listings.price)/sum(listings_details.beds) as price_per_bed
+from
+  listings
+  inner join
+  listings_details
+  on 
+  listings.id = listings_details.id
+group by
+  neighbourhood
+order by
+  price_per_bed desc
+;
+# As a Montrealer...at this point I am wondering what the deal is with Hampstead, outliers? Hosts who are detached from reality?
+# I took at look at the previous query, there are only 6 listings in total in Hampstead, so it is possible that the sample size is just too small
+# Without furthur information, I am moving on for now
+
+# Neighbourhoods with the biggest revenue potential
+# Measure "potential" - with availability 30, I am making the assumption here that more than 30 days is too far away for people to book Airbnb for a trip
+# Limitaion - availability being 0 could also mean that the host simply blocked the calendar
+select
+  listings.neighbourhood,
+  
+  
+
+
