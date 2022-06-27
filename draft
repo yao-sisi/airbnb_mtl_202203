@@ -138,6 +138,8 @@ from
   listings_details
   on 
   listings.id = listings_details.id
+where
+  listings.last_review >= "2021-10-01"
 group by
   listings.neighbourhood
 order by
@@ -174,6 +176,8 @@ from
   inner join
   listings
   on listings_details.id = listings.id
+where
+  listings.last_review >= "2021-10-01"
 group by
   listings.neighbourhood
 ;
@@ -188,8 +192,10 @@ from
   listings_details
   on
   listings.id = listings_details.id
+where
+  listings.last_review >= "2021-10-01"
 ;
-# 135 vs 125, superhosts charge a bit more
+# 141 vs 113, superhosts charge more
 # Zooming in - what about neighbourhoods?
 select
   listings.neighbourhood,
@@ -201,6 +207,8 @@ from
   listings_details
   on
   listings.id = listings_details.id
+where
+  listings.last_review >= "2021-10-01"
 group by
   listings.neighbourhood
 order by
@@ -220,6 +228,8 @@ from
   listings_details
   on
   listings.id = listings_details.id
+where
+  listings.last_review >= "2021-10-01"
 group by
   listings.neighbourhood
 order by
@@ -243,8 +253,102 @@ select
   avg(review_scores_location) as avg_rating_location
 from
   listings_details
+  inner join
+  listings
+  on
+  listings_details.id = listings.id
+where
+  listings.last_review >= "2021-10-01"
 group by
   host_is_superhost
 ;
 
+select
+  *
+from 
+  listings_details
+where
+  host_is_superhost = ''
+;
+# two records with col host_is_superhost blank, does not affect our analysis
+# relationship between instant book and revenue potential
+
+select distinct(instant_bookable) from listings_details;
+
+select
+  avg(case when listings_details.instant_bookable = 't' then listings.price * (30 - listings_details.availability_30) end) as instantbook_potential,
+  avg(case when listings_details.instant_bookable = 'f' then listings.price * (30 - listings_details.availability_30) end) as regular_potential
+from
+  listings_details
+  inner join
+  listings
+  on
+  listings_details.id = listings.id
+where
+  listings.last_review >= "2021-10-01"
+;
+# this does not match Airbnb's claim that enabling instant book increases a host's earnings
+# let's look at price and availability_30 separately
+
+select
+  avg(case when listings_details.instant_bookable = 't' then listings.price end) as instantbook_avg_price,
+  avg(case when listings_details.instant_bookable = 'f' then listings.price end) as regular_avg_price
+from
+  listings_details
+  inner join
+  listings
+  on
+  listings_details.id = listings.id
+where
+  listings.last_review >= "2021-10-01"
+;
+# average price is even higher without instant book, according to Airbnb hosts get double the reservations because of the convenience factor
+# is it true that with instant book enabled, hosts get more reservations?
+# again we will use the availibility for the next 30 days to measure it
+select
+  avg(case when instant_bookable = 't' then availability_30 end) as instantbook_avail,
+  avg(case when instant_bookable = 'f' then availability_30 end) as regular_avail
+from
+  listings_details
+  inner join
+  listings
+  on
+  listings_details.id = listings.id
+where
+  listings.last_review >= "2021-10-01"
+;
+# hosts with instant book enabled seems to be more available, which means they get less reservations.
+# again, I see the missing opportunity - hosts are not charging premium for the convenience that comes with instant book
+# Airbnb should work on making their hosts better informed in terms of pricing, also incentivize hosts by optimizing search results etc
+
+
+
+# Preparing data for Tableau
+select
+ listings.id,
+ listings.host_id,
+ listings.neighbourhood,
+ listings.room_type,
+ listings.number_of_reviews,
+ listings.last_review,
+ listings_details.host_since,
+ listings_details.host_is_superhost,
+ listings_details.bedrooms,
+ listings_details.beds,
+ listings_details.price,
+ listings_details.availability_30,
+ listings_details.review_scores_rating,
+ listings_details.review_scores_accuracy,
+ listings_details.review_scores_cleanliness,
+ listings_details.review_scores_checkin,
+ listings_details.review_scores_communication,
+ listings_details.review_scores_location,
+ listings_details.instant_bookable
+from
+  listings
+  inner join
+  listings_details
+  on
+  listings.id = listings_details.id
+;
 
