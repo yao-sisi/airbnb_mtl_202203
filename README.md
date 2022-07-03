@@ -7,3 +7,8 @@ What I put on the dashboard are the final results, and looks like I only looked 
 
 I sliced and diced the data many different ways before narrowing it down to the most relevant informatoin
 
+Please feel free to comment and suggest improvements, you can reach out to me via email or LinkedIn.
+
+Happy Data Science'ing.
+
+Sisi
