@@ -1,14 +1,28 @@
-# airbnb_mtl_202203
-Airbnb Montreal
+# Airbnb Montreal - Revenue Analysis with SQL and Tableau
 
-This is my "exploratory data analysis" and thought process for this analysis/Tableau dashboard
+As someone who is interested in becoming a data analyst/data scientist in tech/media, Airbnb is one of the companies I follow closely.
 
-What I put on the dashboard are the final results, and looks like I only looked at a part of the data but this code shows that it is not the case ;)
+There are a lot of datasets on Airbnb out there and I didn’t know why until a week and a half ago when I stumbled upon a website called Inside Airbnb. Naturally, I thought it was a good idea to take a look at the data on my home city of Montreal and see what I can find.
 
-I sliced and diced the data many different ways before narrowing it down to the most relevant informatoin
+The data contained more than one table and looked a bit messy, I decided to do some light cleaning and EDA in SQL before moving on to visualizing my findings with Tableau.
 
-Please feel free to comment and suggest improvements, you can reach out to me via email or LinkedIn.
+## Data Exploration and Storytelling
 
-Happy Data Science'ing.
 
-Sisi
+I went into the analysis with one main question — if I was an Airbnb employee, how would I turn the data I have into actionable items in order for the company to optimize its revenue.
+
+First and foremost, I needed to define the KPI(s) to use to measure revenue as I didn’t have access to Airbnb’s actual revenue information.
+
+I decided to estimate the revenue potential by the total earnings of all active listings in the next month(30 days).
+
+Namely, Revenue Potential = Price x (30 — availability_30).
+
+I then needed to define what “active listings” mean in this analysis — it would mean that the listing’s last review was made no earlier than October 2021.
+
+With that in mind, I dove into the analysis looking for the main revenue contributors (by different variables), and whether Airbnb has exhausted their revenue potential.
+
+Here’s the [SQL code](https://github.com/yao-sisi/airbnb_mtl_202203/blob/main/SQL) with my thought process as comments.
+
+Here’s the [Tableau Viz](https://public.tableau.com/views/AirbnbMontreal/Dashboard1?:language=en-US&:display_count=n&:origin=viz_share_link) presenting my findings and recommendations (interactive).
+
+<img align="left" width="700" height="350" src="https://miro.medium.com/max/700/1*qQ7ogvbh-vUXT_9gDup0lQ.png">
